@@ -1,13 +1,13 @@
-# Fichier starter volontairement incomplet.
-# Objectif du TP : les étudiants doivent écrire eux-mêmes la CD.
-#
-# Travail attendu :
-# - séparer la CD de la CI ;
-# - prévoir un déploiement staging simulé ;
-# - prévoir un déploiement production simulé ;
-# - conditionner la production à un tag ou à une validation ;
-# - ajouter un smoke test après déploiement ;
-# - documenter la stratégie de rollback.
-#
-# Ce fichier ne lance aucun workflow tant que les étudiants
-# n'ont pas ajouté name, on, jobs et steps.
+name: CD starter a completer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  consigne:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consigne
+        run: |
+          echo "Ce workflow est volontairement minimal."
+          echo "Les etudiants doivent ajouter staging, production simulee, smoke test et rollback."

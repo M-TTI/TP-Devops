@@ -1,26 +1,13 @@
-# Fichier starter volontairement incomplet.
-# Objectif du TP : les étudiants doivent écrire eux-mêmes la CI.
-#
-# Travail attendu :
-# - déclencher la CI sur push et pull_request ;
-# - installer Node.js ;
-# - installer les dépendances dans api ;
-# - lancer les tests ;
-# - ajouter npm audit ;
-# - ajouter npm outdated ou une étape équivalente ;
-# - construire les images Docker ;
-# - faire échouer la CI si une étape critique échoue.
-#
-# Exemple de début à compléter :
-#
-# name: CI
-#
-# on:
-#   push:
-#   pull_request:
-#
-# jobs:
-#   test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
+name: CI starter a completer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  consigne:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consigne
+        run: |
+          echo "Ce workflow est volontairement minimal."
+          echo "Les etudiants doivent ajouter push, pull_request, npm ci, npm test, npm audit, npm outdated et docker compose build."

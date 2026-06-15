@@ -32,11 +32,11 @@ jobs:
 
       - name: Rollback on failure
         if: failure()
-        run: docker compose -f docker-compose.staging.yml down
+        run: docker compose -f docker-compose.yml -f docker-compose.staging.yml down
 
       - name: Teardown staging
         if: always()
-        run: docker compose -f docker-compose.staging.yml down
+        run: docker compose -f docker-compose.yml -f docker-compose.staging.yml down
   
   deploy-prod:
     runs-on: ubuntu-latest

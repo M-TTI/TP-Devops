@@ -68,7 +68,32 @@ Frontend :
 
 Ouvrir `frontend/src/index.html` dans un navigateur ou le servir avec un serveur statique.
 
-## Important
+## Diagnostic
 
-Le projet contient maintenant le minimum pour tourner avec Docker.
-Les etudiants doivent l'ameliorer pendant le TP pour atteindre les exigences finales.
+```bash
+docker compose ps
+docker compose logs --tail=100 api
+curl http://localhost:8080/api/health
+curl http://localhost:8080/api/ready
+docker inspect shoplite_api
+```
+
+## Centralisation des logs
+
+En local, les logs sont écrits sur stdout/stderr et capturés par Docker (driver `json-file`, rotation 10 Mo / 3 fichiers).
+
+En production, les logs JSON structurés seraient acheminés vers un système centralisé :
+
+- **ELK Stack** (Elasticsearch + Logstash + Kibana) — collecte via Filebeat ou Fluentd
+- **Grafana Loki** — agrégation légère, requêtes LogQL
+- **AWS CloudWatch Logs** — si déploiement sur EC2/ECS
+
+Le champ `request_id` présent dans chaque log permet de corréler toutes les lignes d'une même requête dans ces outils.
+
+## Suivi d'incident
+
+| Symptôme | Heure | Cause | Commande utilisée | Résultat |
+|---|---|---|---|---|
+| `GET /api/products` retourne 500 | J8 14:32 | Exception non gérée dans `products.js` après merge | `docker compose logs --tail=50 api` | Stacktrace visible, origine identifiée |
+| CI rouge sur `feature/products` | J8 14:35 | Test `products.test.js` échoue (500 au lieu de 200) | GitHub Actions → onglet Tests | Confirmation de la régression |
+| Rollback vers v1.0.0 | J8 14:50 | `./scripts/rollback.sh v1.0.0` | `curl /api/products` + `npm test` | Tests verts, données PostgreSQL intactes |

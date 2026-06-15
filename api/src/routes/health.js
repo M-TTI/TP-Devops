@@ -13,7 +13,7 @@ router.get("/health", async (req, res) => {
       version: process.env.npm_package_version || "1.0.0",
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
+  } catch {
     res.status(503).json({
       status: "error",
       api: "OK",
@@ -30,7 +30,7 @@ router.get("/ready", async (req, res) => {
     res.json({
       status: "ok",
     });
-  } catch (error) {
+  } catch {
     res.status(503).json({
       status: "error",
     });

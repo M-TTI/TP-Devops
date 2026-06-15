@@ -1,5 +1,11 @@
 const { randomUUID } = require("crypto");
-const SENSITIVE_KEYS = ["authorization", "password", "token", "secret", "x-api-key"];
+const SENSITIVE_KEYS = [
+  "authorization",
+  "password",
+  "token",
+  "secret",
+  "x-api-key",
+];
 const log = {
   debug: (message, extra) => write("DEBUG", message, extra),
   info: (message, extra) => write("INFO", message, extra),
@@ -21,12 +27,14 @@ function sanitizeHeaders(headers) {
 }
 
 function write(level, message, extra = {}) {
-  console.log(JSON.stringify({
-    level,
-    message,
-    ...extra,
-    timestamp: new Date().toISOString(),
-  }));
+  console.log(
+    JSON.stringify({
+      level,
+      message,
+      ...extra,
+      timestamp: new Date().toISOString(),
+    }),
+  );
 }
 
 function middleware(req, res, next) {
@@ -41,7 +49,8 @@ function middleware(req, res, next) {
   });
 
   res.on("finish", () => {
-    const level = res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info";
+    const level =
+      res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info";
     write(level, "request completed", {
       request_id: req.requestId,
       method: req.method,

@@ -7,6 +7,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV API_PORT=3000
+RUN apk update && apk upgrade --no-cache
 COPY --from=deps /app/node_modules ./node_modules
 COPY src ./src
 USER node

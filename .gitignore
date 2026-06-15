@@ -11,3 +11,12 @@ logs
 backup-*.sql
 backups/*.sql
 tmp
+.idea/
+CLAUDE.md
+backups/*.gz
+backups/*.sql.gz
+.docker/
+.DS_Store
+Thumbs.db
+junit.xml
+test-results/

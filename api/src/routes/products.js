@@ -4,6 +4,7 @@ const db = require("../db");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
+  throw new Error("Incident v1.1.0");
   try {
     const result = await db.query(
       "SELECT id, name, description, price_cents FROM products ORDER BY id",

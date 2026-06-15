@@ -1,8 +1,14 @@
 services:
+  db:
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-shoplite_staging}
+
   api:
     environment:
-      APP_VERSION: staging-starter
+      NODE_ENV: staging
+      APP_VERSION: ${APP_VERSION:-staging}
+      LOG_LEVEL: debug
 
   proxy:
     ports:
-      - "8081:80"
+      - "${HTTP_PORT:-8081}:80"

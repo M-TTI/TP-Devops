@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.json({
     name: "ShopLite API",
     version: "0.1.0",
-    endpoints: ["/health", "/products"]
+    endpoints: ["/health", "/products"],
   });
 });
 

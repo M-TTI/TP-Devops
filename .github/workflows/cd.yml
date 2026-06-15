@@ -1,13 +1,58 @@
-name: CD starter a completer
+name: CD
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  consigne:
+  deploy-staging:
     runs-on: ubuntu-latest
+    environment: staging
     steps:
-      - name: Consigne
-        run: |
-          echo "Ce workflow est volontairement minimal."
-          echo "Les etudiants doivent ajouter staging, production simulee, smoke test et rollback."
+      - uses: actions/checkout@v4
+
+      - name: Build images
+        run: docker compose build
+
+      - name: Start staging
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+
+      - name: Wait for services
+        run: sleep 20
+
+      - name: Smoke test staging
+        env:
+          BASE_URL: http://localhost:8081
+        run: ./scripts/smoke-test.sh
+
+      - name: Rollback on failure
+        if: failure()
+        run: docker compose -f docker-compose.staging.yml down
+
+      - name: Teardown staging
+        if: always()
+        run: docker compose -f docker-compose.staging.yml down
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy-staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy production
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: docker compose up -d
+
+      - name: Smoke test production
+        env:
+          BASE_URL: http://localhost:8080
+        run: ./scripts/smoke-test.sh

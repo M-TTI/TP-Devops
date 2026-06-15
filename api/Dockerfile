@@ -7,7 +7,9 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV API_PORT=3000
-RUN apk update && apk upgrade --no-cache
+RUN apk --no-cache upgrade \
+    && rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx
 COPY --from=deps /app/node_modules ./node_modules
 COPY src ./src
 USER node
